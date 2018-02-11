@@ -11,6 +11,7 @@ public abstract class Piece {
     boolean alive = true;
     int xcoord;
     int ycoord;
+    
     abstract void move();
     abstract void isValid();
     

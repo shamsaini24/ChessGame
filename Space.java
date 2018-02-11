@@ -81,6 +81,23 @@ public class Space extends Button{
        
 
     }
+    /**
+     * Checks if the space currently has a piece on it or not.
+     * @return boolean, True if space has a piece, false if null.
+     */
+    public boolean hasPiece() {
+        if(currentpiece == null) {
+            return false;
+        }
+        return true;
+        
+    }
+    
+    public void removePiece() {
+        currentpiece = null;
+        setText("");
+        
+    }
 
     /**
      * @return the currentpiece
