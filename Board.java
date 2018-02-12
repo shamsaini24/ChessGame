@@ -45,27 +45,36 @@ public class Board extends Application {
                     @Override
                     public void handle(ActionEvent event) {
                         if(firstClick == null && clickCount == 0) {
+                            clickCount++;
                             eventsource = (Node) event.getSource();
                             int x1 = GridPane.getColumnIndex(eventsource);
                             int y1 = GridPane.getRowIndex(eventsource);
                             System.out.println("X1" + x1);
                             System.out.println("Y1" + y1);
-                            firstClick = getSpace(x1, y1);   
-                            clickCount++;
+                            firstClick = getSpace(x1, y1);
+                            if(!firstClick.hasPiece()) {
+                                firstClick = null;
+                                clickCount = 0;
+                            }
                         } else if(secondClick == null && clickCount == 1) {
+                            clickCount++;
                             eventsource = (Node) event.getSource();
                             int x2 = GridPane.getColumnIndex(eventsource);
                             int y2 = GridPane.getRowIndex(eventsource);
                             System.out.println("X2" + x2);
                             System.out.println("Y2" + y2);
-                            secondClick = getSpace(x2, y2);  
-                            clickCount++;
+                            secondClick = getSpace(x2, y2);
+                            if(firstClick == secondClick) {
+                                firstClick = null;
+                                secondClick = null;
+                                clickCount = 0;
+                            }
                             
-                            if(clickCount == 2) {
+                            if(clickCount == 2 && firstClick != null && secondClick != null) {
                                 Piece newpiece = firstClick.getCurrentpiece();
-                                int newcolor = firstClick.getColor();
+                                int newcolor = newpiece.getColor();
                                 System.out.println("Eroor");
-                                secondClick.setPiece(newpiece, newcolor);
+                                secondClick.setPiece(newpiece);
                                 System.out.println(newcolor);
                                 firstClick.removePiece();
                                 firstClick = null;
@@ -112,9 +121,9 @@ public class Board extends Application {
             
             if(secondClick.hasPiece()) {
                 Piece newpiece = firstClick.getCurrentpiece();
-                int newcolor = firstClick.getColor();
+                int newcolor = newpiece.getColor();
                 System.out.println("Eroor");
-                secondClick.setPiece(newpiece, newcolor);
+                secondClick.setPiece(newpiece);
             }
         }
         
@@ -126,28 +135,28 @@ public class Board extends Application {
         int black = 0;
         int white = 1;
         for(int column = 0; column < 8; column++) {
-            spaces[column][1].setPiece(new Pawn(true, column, 1), black);
+            spaces[column][1].setPiece(new Pawn(true, column, 1, black));
         }
-        spaces[0][0].setPiece(new Rook(true, 0, 0), black);
-        spaces[1][0].setPiece(new Knight(true, 1, 0), black);
-        spaces[2][0].setPiece(new Bishop(true, 2, 0), black);
-        spaces[3][0].setPiece(new King(true, 3, 0), black);
-        spaces[4][0].setPiece(new Queen(true, 4, 0), black);
-        spaces[5][0].setPiece(new Bishop(true, 5, 0), black);
-        spaces[6][0].setPiece(new Knight(true, 6, 0), black);
-        spaces[7][0].setPiece(new Rook(true, 7, 0), black);
+        spaces[0][0].setPiece(new Rook(true, 0, 0, black));
+        spaces[1][0].setPiece(new Knight(true, 1, 0, black));
+        spaces[2][0].setPiece(new Bishop(true, 2, 0, black));
+        spaces[3][0].setPiece(new King(true, 3, 0, black));
+        spaces[4][0].setPiece(new Queen(true, 4, 0, black));
+        spaces[5][0].setPiece(new Bishop(true, 5, 0, black));
+        spaces[6][0].setPiece(new Knight(true, 6, 0, black));
+        spaces[7][0].setPiece(new Rook(true, 7, 0, black));
         
-        spaces[0][7].setPiece(new Rook(true, 0, 0), white);
-        spaces[1][7].setPiece(new Knight(true, 1, 0), white);
-        spaces[2][7].setPiece(new Bishop(true, 2, 0), white);
-        spaces[3][7].setPiece(new King(true, 3, 0), white);
-        spaces[4][7].setPiece(new Queen(true, 4, 0), white);
-        spaces[5][7].setPiece(new Bishop(true, 5, 0), white);
-        spaces[6][7].setPiece(new Knight(true, 6, 0), white);
-        spaces[7][7].setPiece(new Rook(true, 7, 0), white);
+        spaces[0][7].setPiece(new Rook(true, 0, 0, white));
+        spaces[1][7].setPiece(new Knight(true, 1, 0, white));
+        spaces[2][7].setPiece(new Bishop(true, 2, 0, white));
+        spaces[3][7].setPiece(new King(true, 3, 0, white));
+        spaces[4][7].setPiece(new Queen(true, 4, 0, white));
+        spaces[5][7].setPiece(new Bishop(true, 5, 0, white));
+        spaces[6][7].setPiece(new Knight(true, 6, 0, white));
+        spaces[7][7].setPiece(new Rook(true, 7, 0, white));
         
         for(int column = 0; column < 8; column++) {
-            spaces[column][6].setPiece(new Pawn(true, column, 6), white);
+            spaces[column][6].setPiece(new Pawn(true, column, 6, white));
         }
     }
     public static void main(String[] args) {
