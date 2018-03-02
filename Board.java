@@ -86,6 +86,12 @@ public class Board extends GridPane implements Serializable {
                         } else if (secondClick == null && clickCount == 1) {
                             eventsource = (Node) event.getSource();
                             getSecondClick(eventsource);
+                            if(secondClick.hasPiece() && secondClick.getCurrentpiece().color == movePiece.getColor()) {
+                                firstClick = null;
+                                secondClick = null;
+                                clickCount = 0;
+                                System.out.println("Cannot take same color");
+                            }
                             
                             //If a move was made to the same spot
                             if (firstClick == secondClick || !movePiece.isValid(secondClick, firstClick)) {

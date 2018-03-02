@@ -44,7 +44,6 @@ public class Rook extends Piece{
         }
         return true;
     }
-    //error when moving left or right
     
     private boolean checkX(int startX, int endX, int endY) {
         if(startX < endX) {

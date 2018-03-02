@@ -39,8 +39,7 @@ public class Knight extends Piece{
 
     @Override
     boolean isPathClear(Space start, Space end) {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
 }

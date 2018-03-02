@@ -33,4 +33,9 @@ public class King extends Piece{
         return false;
     }
 
+    @Override
+    boolean isPathClear(Space start, Space end) {
+        return true;
+    }
+
 }

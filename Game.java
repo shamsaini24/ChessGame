@@ -22,7 +22,7 @@ import javafx.scene.control.MenuItem;
  */
 public class Game extends Application {
     Group root = new Group();
-    static Board board = new Board();    
+    Board board = new Board();    
     Board newGame = null;
     FileInputStream f2 = null;
     ObjectInputStream in = null;
