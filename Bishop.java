@@ -20,10 +20,17 @@ public class Bishop extends Piece {
         
     }
 
+
     @Override
-    void isValid() {
-        // TODO Auto-generated method stub
-        
+    boolean isValid(Space newSpace, Space curSpace) {
+        int startX = curSpace.getX();
+        int startY = curSpace.getY();
+        int endX = newSpace.getX();
+        int endY = newSpace.getY();
+        if(Math.abs(endX - startX) == Math.abs(endY - startY)) {
+            return true;
+        }
+        return false;
     }
 
 }

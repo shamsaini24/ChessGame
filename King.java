@@ -20,10 +20,17 @@ public class King extends Piece{
         
     }
 
+
     @Override
-    void isValid() {
-        // TODO Auto-generated method stub
-        
+    boolean isValid(Space newSpace, Space curSpace) {
+        int startX = curSpace.getX();
+        int startY = curSpace.getY();
+        int endX = newSpace.getX();
+        int endY = newSpace.getY();
+        if(Math.abs(endX - startX) < 2 && Math.abs(endY - startY) < 2) {
+            return true;
+        }
+        return false;
     }
 
 }

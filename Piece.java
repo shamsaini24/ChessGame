@@ -1,19 +1,19 @@
-/**
- * 
- */
 package ca.bcit.comp2526.a2a;
+
+import java.io.Serializable;
 
 /**
  * @author sham2
  *
  */
-public abstract class Piece {
+public abstract class Piece implements Serializable{
     boolean alive = true;
     int xcoord;
     int ycoord;
     int color;
     abstract void move();
-    abstract void isValid();
+    abstract boolean isValid(Space newSpace, Space curSpace);
+    abstract boolean isPathClear(Space start, Space end);
     
     public Piece(boolean alive , int xcoord, int ycoord, int color) {
         this.alive = alive;

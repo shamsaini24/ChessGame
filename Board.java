@@ -3,116 +3,39 @@
  */
 package ca.bcit.comp2526.a2a;
 
-import com.sun.glass.events.MouseEvent;
 
-import javafx.application.Application;
+import java.io.Serializable;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
+
 
 /**
  * @author sham2
  *
  */
-public class Board extends Application {
+public class Board extends GridPane implements Serializable {
     final static Space[][] spaces = new Space[8][8];
     private Node eventsource;
     private Space firstClick = null;
     private Space secondClick = null;
+    private Piece movePiece = null;
     private static int clickCount = 0;
-    GridPane grid = new GridPane();
-    /* (non-Javadoc)
-     * @see javafx.application.Application#start(javafx.stage.Stage)
-     */
-    @Override
-    public void start(Stage primarystage) throws Exception {
-        final int appWidth = 550;
-        final int appHeight = 550;
-        
-        for (int column = 0; column < spaces.length; column++) {
-            for(int row = 0; row < spaces.length ; row++) {
-                Space space = new Space(column, row);
-                space.setPrefSize(75,75);
-                space.setPadding(Insets.EMPTY);
-                space.setOnAction(new EventHandler<ActionEvent>() {
-
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if(firstClick == null && clickCount == 0) {
-                            clickCount++;
-                            eventsource = (Node) event.getSource();
-                            int x1 = GridPane.getColumnIndex(eventsource);
-                            int y1 = GridPane.getRowIndex(eventsource);
-                            System.out.println("X1" + x1);
-                            System.out.println("Y1" + y1);
-                            firstClick = getSpace(x1, y1);
-                            if(!firstClick.hasPiece()) {
-                                firstClick = null;
-                                clickCount = 0;
-                            }
-                        } else if(secondClick == null && clickCount == 1) {
-                            clickCount++;
-                            eventsource = (Node) event.getSource();
-                            int x2 = GridPane.getColumnIndex(eventsource);
-                            int y2 = GridPane.getRowIndex(eventsource);
-                            System.out.println("X2" + x2);
-                            System.out.println("Y2" + y2);
-                            secondClick = getSpace(x2, y2);
-                            if(firstClick == secondClick) {
-                                firstClick = null;
-                                secondClick = null;
-                                clickCount = 0;
-                            }
-                            
-                            if(clickCount == 2 && firstClick != null && secondClick != null) {
-                                Piece newpiece = firstClick.getCurrentpiece();
-                                int newcolor = newpiece.getColor();
-                                System.out.println("Eroor");
-                                secondClick.setPiece(newpiece);
-                                System.out.println(newcolor);
-                                firstClick.removePiece();
-                                firstClick = null;
-                                secondClick = null;
-                                clickCount = 0;
-                                
-                            }
-                        }
-                                               
-                    }
-                    
-                });
-                spaces[column][row] = space;
-                
-        
-                if((row % 2 == 1 && column % 2 == 1) || (row % 2 == 0 && column % 2 == 0)){
-                    space.setStyle("-fx-background-color: grey; -fx-font: 57 arial; ");
-                    grid.add(space, column, row);
-
-                } else {
-                    space.setStyle("-fx-background-color: white; -fx-font: 57 arial;");
-                    grid.add(space, column, row);
-                }
-            }
-
-        }
-        initalizePieces();        
-        grid.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(grid, appWidth, appHeight);
-        primarystage.setTitle("Chess Board");
-        primarystage.setScene(scene);
-        primarystage.show();
+    Player player1 = new Player(1);
+    Player player2 = new Player(0);
+    
+    public Board(){
+        initalizeSpaces();
+        initalizePieces();
     }
-    public Space getSpace(int x, int y) {
+    public static Space getSpace(int x, int y) {
         return spaces[x][y];
     }
     
-    public void processSpacePress(ActionEvent e) {
+    /*public void processSpacePress(ActionEvent e) {
         if(secondClick == null && clickCount == 1) {
             eventsource = (Node) e.getSource();
             int x2 = GridPane.getColumnIndex(eventsource);
@@ -125,10 +48,121 @@ public class Board extends Application {
                 System.out.println("Eroor");
                 secondClick.setPiece(newpiece);
             }
+        }   
+    }
+    */
+    private void initalizeSpaces() {
+        for (int column = 0; column < spaces.length; column++) {
+            for(int row = 0; row < spaces.length ; row++) {
+                Space space = new Space(column, row);
+                space.setPrefSize(75,75);
+                space.setPadding(Insets.EMPTY);
+                space.setOnAction(new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public void handle(ActionEvent event) {
+                        
+                        if(firstClick == null && clickCount == 0) {
+                            eventsource = (Node) event.getSource();
+                            getFirstClick(eventsource);
+                            if(movePiece == null || player1.turn && !isSameColor(player1, movePiece)) {
+                               firstClick = null;
+                               movePiece = null;
+                               clickCount = 0;
+                               System.out.println("wrong color white");
+                               return;
+                            } else if(movePiece == null  || player2.turn && !isSameColor(player2, movePiece)) {
+                                firstClick = null;
+                                movePiece = null;
+                                clickCount = 0;
+                                System.out.println("Wrong color black");
+                                return;
+                            }
+  
+                            if (!firstClick.hasPiece()) {
+                                firstClick = null;
+                                clickCount = 0;
+                            }
+                        } else if (secondClick == null && clickCount == 1) {
+                            eventsource = (Node) event.getSource();
+                            getSecondClick(eventsource);
+                            
+                            //If a move was made to the same spot
+                            if (firstClick == secondClick || !movePiece.isValid(secondClick, firstClick)) {
+                                firstClick = null;
+                                secondClick = null;
+                                clickCount = 0;
+                            }
+                            
+                            if (clickCount == 2 && firstClick != null && secondClick != null && movePiece.isPathClear(firstClick, secondClick)) {
+                                Piece newpiece = firstClick.getCurrentpiece();
+                                int newcolor = newpiece.getColor();
+                                secondClick.setPiece(newpiece);
+                                System.out.println(newcolor);
+                                firstClick.removePiece();
+                                firstClick = null;
+                                secondClick = null;
+                                clickCount = 0;
+                                if(player1.isTurn()) {
+                                    player1.setTurn(false);
+                                    player2.setTurn(true);
+                                } else {
+                                    player2.setTurn(false);
+                                    player1.setTurn(true);
+                                }
+                                
+                            } else {
+                                firstClick = null;
+                                secondClick = null;
+                                clickCount = 0;
+
+
+                            }
+                        }
+                                               
+                    }
+                    
+                });
+                spaces[column][row] = space;
+                
+        
+                if((row % 2 == 1 && column % 2 == 1) || (row % 2 == 0 && column % 2 == 0)){
+                    space.setStyle("-fx-background-color: grey; -fx-font: 57 arial; ");
+                    add(space, column, row);
+
+                } else {
+                    space.setStyle("-fx-background-color: white; -fx-font: 57 arial;");
+                    add(space, column, row);
+                }
+            }
+
         }
+    }
+    private boolean isSameColor(Player player, Piece piece) {
+        int playerColor = player.getColor();
+        int pieceColor = piece.getColor();
+        if(playerColor == pieceColor) {
+            return true;
+        }
+        return false;
         
-        
-        
+    }
+    private void getFirstClick(Node eventsource) {
+        clickCount++;
+        int x1 = GridPane.getColumnIndex(eventsource);
+        int y1 = GridPane.getRowIndex(eventsource);
+        System.out.println("X1: " + x1);
+        System.out.println("Y1: " + y1);
+        firstClick = getSpace(x1, y1);
+        movePiece = firstClick.getCurrentpiece();
+    }
+    private void getSecondClick(Node eventsource) {
+        clickCount++;
+        int x2 = GridPane.getColumnIndex(eventsource);
+        int y2 = GridPane.getRowIndex(eventsource);
+        System.out.println("X2: " + x2);
+        System.out.println("Y2: " + y2);
+        secondClick = getSpace(x2, y2);
     }
     
     private static void initalizePieces() {
@@ -159,8 +193,31 @@ public class Board extends Application {
             spaces[column][6].setPiece(new Pawn(true, column, 6, white));
         }
     }
-    public static void main(String[] args) {
-        launch(args);
+    
+    public boolean isPathClear(Space start, Space end) {
+        int startX = start.getX();
+        int startY = start.getY();
+        int endX = end.getX();
+        int endY = end.getY();
+        Piece movePiece = start.getCurrentpiece();
+        if(movePiece.getClass() == new Pawn(true, 0, 0, 1).getClass()) {
+            Pawn pawn = (Pawn) movePiece;
+            
         }
+        if(start.getCurrentpiece().getClass() == new Rook(true, 0, 0, 1).getClass()) {
+            
+        }
+        if(start.getCurrentpiece().getClass() == new King(true, 0, 0, 1).getClass()) {
+            
+        }
+        if(start.getCurrentpiece().getClass() == new Queen(true, 0, 0, 1).getClass()) {
+            
+        }
+        if(start.getCurrentpiece().getClass() == new Bishop(true, 0, 0, 1).getClass()) {
+            
+        }
+       
+        return true;
+    }
 
 }

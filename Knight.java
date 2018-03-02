@@ -21,9 +21,26 @@ public class Knight extends Piece{
     }
 
     @Override
-    void isValid() {
-        // TODO Auto-generated method stub
+    boolean isValid(Space newSpace, Space curSpace) {
+        int startX = curSpace.getX();
+        int startY = curSpace.getY();
+        int endX = newSpace.getX();
+        int endY = newSpace.getY();
+        int sumrow = startY - endY;
+        int sumcol = startX - endX;
+        if((sumrow == 2 && sumcol == 1)|| (sumrow == -2 && sumcol == -1) || (sumrow == 2 && sumcol == -1) ||(sumrow == 2 && sumcol == 1) ) {
+            return true;
+        } else if((sumrow == 1 && sumcol == 2) || (sumrow == -1 && sumcol == -2) || (sumrow == -1 && sumcol == 2) || (sumrow == 1 && sumcol == -2)) {
+            return true;
+        }
+        return false;
         
+    }
+
+    @Override
+    boolean isPathClear(Space start, Space end) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

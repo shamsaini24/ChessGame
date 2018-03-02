@@ -21,9 +21,18 @@ public class Queen extends Piece {
     }
 
     @Override
-    void isValid() {
-        // TODO Auto-generated method stub
-        
+    boolean isValid(Space newSpace, Space curSpace) {
+        int startX = curSpace.getX();
+        int startY = curSpace.getY();
+        int endX = newSpace.getX();
+        int endY = newSpace.getY();
+        if((endX == startX || endY == startY)) {
+            return true;
+        }
+        else if ((Math.abs(endX - startX) == Math.abs(endY - startY))) {
+            return true;
+        }
+        return false;
     }
 
 }

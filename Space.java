@@ -3,13 +3,15 @@
  */
 package ca.bcit.comp2526.a2a;
 
+import java.io.Serializable;
+
 import javafx.scene.control.Button;
 
 /**
  * @author sham2
  *
  */
-public class Space extends Button{
+public class Space extends Button implements Serializable{
     Piece currentpiece;
     int x;
     int y;
