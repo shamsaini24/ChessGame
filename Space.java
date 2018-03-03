@@ -12,6 +12,10 @@ import javafx.scene.control.Button;
  *
  */
 public class Space extends Button implements Serializable{
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 954955410672263768L;
     Piece currentpiece;
     int x;
     int y;

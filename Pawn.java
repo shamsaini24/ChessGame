@@ -3,11 +3,17 @@
  */
 package ca.bcit.comp2526.a2a;
 
+import java.io.Serializable;
+
 /**
  * @author sham2
  *
  */
-public class Pawn extends Piece {
+public class Pawn extends Piece implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6934483937342497935L;
     boolean firstTurn = true;
     public Pawn(boolean alive, int xcoord, int ycoord, int color) {
         super(alive, xcoord, ycoord, color);

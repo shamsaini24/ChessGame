@@ -22,10 +22,16 @@ import javafx.scene.control.MenuItem;
  */
 public class Game extends Application {
     Group root = new Group();
-    Board board = new Board();    
-    Board newGame = null;
-    FileInputStream f2 = null;
-    ObjectInputStream in = null;
+    Board newGame = new Board();    
+    Board loadGame = null;
+    FileInputStream f2;
+    ObjectInputStream in;
+    FileInputStream f1;
+    ObjectInputStream in1;
+    FileInputStream f3;
+    ObjectInputStream in3;
+    private Space spaces[][];
+    private Piece pieces[];
 
     /* (non-Javadoc)
      * @see javafx.application.Application#start(javafx.stage.Stage)
@@ -34,6 +40,8 @@ public class Game extends Application {
     public void start(Stage primarystage) throws Exception {
         final int appWidth = 760;
         final int appHeight = 650;
+        pieces = new Piece[32];
+        
       //Top Menu Bar
         MenuBar menuBar = new MenuBar();
      
@@ -43,7 +51,7 @@ public class Game extends Application {
         menuItemA.setOnAction(new EventHandler<ActionEvent>() {
          
             @Override public void handle(ActionEvent e) {
-                root.getChildren().add(board);
+                root.getChildren().add(newGame);
             }
         });
       //FIX LOADING NEW GAME
@@ -53,20 +61,34 @@ public class Game extends Application {
             @Override public void handle(ActionEvent e) {
               //Read them back
                 try {
+                f3 = new FileInputStream("pieces.ser");
+                in3 = new ObjectInputStream(f3);
+                f1 = new FileInputStream("spaces.ser");
+                in1 = new ObjectInputStream(f1);
                 f2 = new FileInputStream("Board.ser");
                 in = new ObjectInputStream(f2);
-                newGame = (Board)in.readObject();
+                loadGame = (Board)in.readObject();
+                spaces = (Space[][]) in1.readObject();
+                pieces = (Piece[]) in3.readObject();
                 in.close();
                 f2.close();
-
+                in1.close();
+                f1.close();
+                in3.close();
+                f3.close();
                 }catch(IOException err){
                         err.printStackTrace();
                 }catch(ClassNotFoundException err){
                         err.printStackTrace();
                 }
-                if(newGame != null ) {
-                    root.getChildren().add(newGame);
+                if(loadGame != null ) {
                     System.out.println("game loaded");
+                    loadGame.redrawBoard(spaces);
+                    loadGame.redrawPieces(pieces);
+                    loadGame.setLayoutY(25);
+                    root.getChildren().remove(newGame);
+                    
+                    root.getChildren().add(loadGame);
 
                 }
 
@@ -75,16 +97,41 @@ public class Game extends Application {
      
         MenuItem menuItemC = new MenuItem("Save");
         menuItemC.setOnAction(new EventHandler<ActionEvent>() {
-         
+
             @Override public void handle(ActionEvent e) {
+                spaces = Board.getSpaces();
+                int pieceCounter = 0;
+                for (int column = 0; column < spaces.length; column++) {
+                    for(int row = 0; row < spaces.length ; row++) {
+                        if(spaces[column][row].hasPiece()) {
+                           Space pieceSpace = Board.getSpace(column, row);
+                           Piece piece = pieceSpace.getCurrentpiece();
+                           pieces[pieceCounter] = piece;
+                           pieceCounter++;
+                        }
+                    }
+                }
+                
                 try{
+                    FileOutputStream f3 = new FileOutputStream("pieces.ser");
+                    ObjectOutput out3 = new ObjectOutputStream(f3);
+                    FileOutputStream f2 = new FileOutputStream("spaces.ser");
+                    ObjectOutput out2 = new ObjectOutputStream(f2);
                     FileOutputStream f = new FileOutputStream("Board.ser");
                     ObjectOutput out = new ObjectOutputStream(f);
                     
-                    out.writeObject(board);
+                    out.writeObject(newGame);
+                    out2.writeObject(spaces);
+                    out3.writeObject(pieces);
                     out.flush();
                     out.close();
+                    out2.flush();
+                    out2.close();
+                    out3.flush();
+                    out3.close();
                     f.close();
+                    f2.close();
+                    f3.close();
                 } catch (IOException i) {
                     i.printStackTrace();
                 }
@@ -95,7 +142,7 @@ public class Game extends Application {
         menu1.getItems().add(menuItemB);
         menu1.getItems().add(menuItemC);
         menuBar.getMenus().add(menu1);
-        board.setLayoutY(25);
+        newGame.setLayoutY(25);
         menuBar.prefWidthProperty().bind(primarystage.widthProperty());
         root.getChildren().add(menuBar);
         Scene scene = new Scene(root, appWidth, appHeight);

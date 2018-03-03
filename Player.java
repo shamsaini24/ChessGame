@@ -10,6 +10,10 @@ import java.io.Serializable;
  *
  */
 public class Player implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7367535552851153390L;
     public boolean turn;
     public int color;
     

@@ -9,6 +9,10 @@ package ca.bcit.comp2526.a2a;
  */
 public class Bishop extends Piece {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1877650859296785635L;
     public Bishop(boolean alive, int xcoord, int ycoord, int color) {
         super(alive, xcoord, ycoord, color);
         // TODO Auto-generated constructor stub

@@ -9,6 +9,11 @@ package ca.bcit.comp2526.a2a;
  */
 public class Knight extends Piece{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8610017507692214564L;
+
     public Knight(boolean alive, int xcoord, int ycoord, int color) {
         super(alive, xcoord, ycoord, color);
         // TODO Auto-generated constructor stub

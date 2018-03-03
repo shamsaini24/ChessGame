@@ -6,6 +6,10 @@ package ca.bcit.comp2526.a2a;
  */
 public class Rook extends Piece{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2689782406231182261L;
     public Rook(boolean alive, int xcoord, int ycoord, int color) {
         super(alive, xcoord, ycoord, color);
         // TODO Auto-generated constructor stub

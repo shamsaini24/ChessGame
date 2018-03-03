@@ -7,6 +7,10 @@ import java.io.Serializable;
  *
  */
 public abstract class Piece implements Serializable{
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6736006883929879829L;
     boolean alive = true;
     int xcoord;
     int ycoord;
@@ -15,7 +19,7 @@ public abstract class Piece implements Serializable{
     abstract boolean isValid(Space newSpace, Space curSpace);
     abstract boolean isPathClear(Space start, Space end);
     
-    public Piece(boolean alive , int xcoord, int ycoord, int color) {
+    public Piece(boolean alive, int xcoord, int ycoord, int color) {
         this.alive = alive;
         this.xcoord = xcoord;
         this.ycoord = ycoord;

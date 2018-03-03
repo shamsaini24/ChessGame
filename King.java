@@ -9,6 +9,11 @@ package ca.bcit.comp2526.a2a;
  */
 public class King extends Piece{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2346578235749597566L;
+
     public King(boolean alive, int xcoord, int ycoord, int color) {
         super(alive, xcoord, ycoord, color);
         // TODO Auto-generated constructor stub
