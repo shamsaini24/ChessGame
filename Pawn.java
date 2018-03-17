@@ -26,6 +26,10 @@ public class Pawn extends Piece implements Serializable {
     }
 
     @Override
+    /**
+     * Checks if the space the piece is being moved to is valid.
+     * @return a boolean, if the space is a valid spot it can move.
+     */
     boolean isValid(Space newSpace, Space curSpace) {
         int startX = curSpace.getX();
         int startY = curSpace.getY();
@@ -70,8 +74,11 @@ public class Pawn extends Piece implements Serializable {
     }
 
     @Override
+    /**
+     * Determines if the path is clear from start to end.
+     * @return boolean, determines if path is clear or not.
+     */
     boolean isPathClear(Space start, Space end) {
-        int startX = start.getX();
         int startY = start.getY();
         int endX = end.getX();
         int endY = end.getY();

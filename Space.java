@@ -8,29 +8,34 @@ import java.io.Serializable;
 import javafx.scene.control.Button;
 
 /**
+ * A single space on the board.
  * @author sham2
  *
  */
 public class Space extends Button implements Serializable{
-    /**
-     * 
-     */
+    
     private static final long serialVersionUID = 954955410672263768L;
     Piece currentpiece;
     int x;
     int y;
     
+    /**
+     * Constructs a space object.
+     * @param x, the x coordinate
+     * @param y, the y coordinate
+     */
     public Space(int x, int y) {
         this.x = x;
         this.y = y;
         currentpiece = null;
     }
     /**
-     * 
+     * Sets a piece on the space
      * @param newpiece, the piece to be placed and assigned on the space.
      * @param color, an int. 0 is black, 1 is white.
      */
     public void setPiece(Piece newpiece) {
+        //Checks the color of the new piece and proceeds to check what piece it is
         if(newpiece.getColor() == 1) {//WHITE
             if(newpiece.getClass() == new Pawn(true, 0, 0, 1).getClass()) {
                 setText("\u2659");

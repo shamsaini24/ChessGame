@@ -26,6 +26,10 @@ public class Bishop extends Piece {
 
 
     @Override
+    /**
+     * Checks if the space the piece is being moved to is valid.
+     * @return a boolean, if the space is a valid spot it can move.
+     */
     boolean isValid(Space newSpace, Space curSpace) {
         int startX = curSpace.getX();
         int startY = curSpace.getY();
@@ -38,26 +42,33 @@ public class Bishop extends Piece {
     }
 
     @Override
+    /**
+     * Checks the path from the start to end.
+     * @return boolean, determines if path is clear or not.
+     */
     boolean isPathClear(Space start, Space end) {
         int startX = start.getX();
         int startY = start.getY();
         int endX = end.getX();
         int endY = end.getY();
+        // determines if direction is NW and checks it
         if(endX < startX && endY < startY) {
             return checkNW(startX, startY, endX, endY);
         }
+        // determines if direction is NE and checks it
         if(endX > startX && endY < startY) {
             return checkNE(startX, startY, endX, endY);
         }
+        // determines if direction is SW and checks it
         if(endX < startX && endY > startY) {
             return checkSW(startX, startY, endX, endY);
         }
+        // determines if direction is SE and checks it
         if(endX > startX && endY > startY) {
             return checkSE(startX, startY, endX, endY);
         }
         return true;
     }
-    //FIX THIS
     private boolean checkSW(int startX, int startY, int endX, int endY) {
         int y = endY -1;
         for(int x = endX + 1; (x <= startX - 1) && (y >= startY + 1); x++) {

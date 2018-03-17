@@ -3,13 +3,11 @@ package ca.bcit.comp2526.a2a;
 import java.io.Serializable;
 
 /**
+ * The abstract class that is the blueprint for all pieces.
  * @author sham2
  *
  */
 public abstract class Piece implements Serializable{
-    /**
-     * 
-     */
     private static final long serialVersionUID = -6736006883929879829L;
     boolean alive = true;
     int xcoord;

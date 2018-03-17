@@ -24,12 +24,21 @@ public class Game extends Application {
     Group root = new Group();
     Board newGame = new Board();    
     Board loadGame = null;
+    
+    /*
+     * Initalizes all streams for serialization.
+     */
     FileInputStream f2;
     ObjectInputStream in;
     FileInputStream f1;
     ObjectInputStream in1;
     FileInputStream f3;
     ObjectInputStream in3;
+    
+    /*
+     * Arrays used to save the current states of the spaces and
+     * their pieces.
+     */
     private Space spaces[][];
     private Piece pieces[];
 
@@ -54,7 +63,6 @@ public class Game extends Application {
                 root.getChildren().add(newGame);
             }
         });
-      //FIX LOADING NEW GAME
         MenuItem menuItemB = new MenuItem("Load");
         menuItemB.setOnAction(new EventHandler<ActionEvent>() {
          
@@ -85,9 +93,8 @@ public class Game extends Application {
                     System.out.println("game loaded");
                     loadGame.redrawBoard(spaces);
                     loadGame.redrawPieces(pieces);
-                    loadGame.setLayoutY(25);
+                    loadGame.setLayoutY(25);//shifts the loaded game down below the menu bar.
                     root.getChildren().remove(newGame);
-                    
                     root.getChildren().add(loadGame);
 
                 }
@@ -101,6 +108,8 @@ public class Game extends Application {
             @Override public void handle(ActionEvent e) {
                 spaces = Board.getSpaces();
                 int pieceCounter = 0;
+                
+                //A for loop that gets the piece information from all the spaces.
                 for (int column = 0; column < spaces.length; column++) {
                     for(int row = 0; row < spaces.length ; row++) {
                         if(spaces[column][row].hasPiece()) {

@@ -22,23 +22,44 @@ public class Board extends GridPane implements Serializable {
      * 
      */
     private static final long serialVersionUID = -3794334970816881312L;
+    /**
+     * An array of spaces that will be used to manipulate each space and its instance variables.
+     */
     static Space[][] spaces;
+    /**
+     * The instance variables required to make a move.
+     */
     private Node eventsource;
     private Space firstClick = null;
     private Space secondClick = null;
     private Piece movePiece = null;
     private static int clickCount = 0;
+    
+    //Player 1
     Player player1 = new Player(1);
+    //Player 2
     Player player2 = new Player(0);
     
+    /**
+     * Constructs a Board object, initializes the spaces and sets the pieces on the board.
+     */
     public Board(){
         initalizeSpaces();
         initalizePieces();
     }
+    /**
+     * Returns a unique space given x and y coordinates.
+     * @param x, the x coordinate
+     * @param y, the y coordinate
+     * @return A space object.
+     */
     public static Space getSpace(int x, int y) {
         return spaces[x][y];
     }
-    
+    /**
+     * Initializes the spaces both graphically and to the array. Each space is given an event handler and its
+     * own row/column number. 
+     */
     private void initalizeSpaces() {
         spaces = new Space[8][8];
         for (int column = 0; column < spaces.length; column++) {
@@ -51,15 +72,17 @@ public class Board extends GridPane implements Serializable {
                     @Override
                     public void handle(ActionEvent event) {
                         
-                        if(firstClick == null && clickCount == 0) {
+                        if(firstClick == null && clickCount == 0) {//Gathers the data related to the first click
                             eventsource = (Node) event.getSource();
                             getFirstClick(eventsource);
+                            //Checks to see if there is piece on the first click, or if the piece belongs to the player1's color
                             if(movePiece == null || player1.turn && !isSameColor(player1, movePiece)) {
                                firstClick = null;
                                movePiece = null;
                                clickCount = 0;
                                System.out.println("wrong color white");
                                return;
+                            //Checks to see if there is piece on the first click, or if the piece belongs to the player1's color
                             } else if(movePiece == null  || player2.turn && !isSameColor(player2, movePiece)) {
                                 firstClick = null;
                                 movePiece = null;
@@ -67,14 +90,11 @@ public class Board extends GridPane implements Serializable {
                                 System.out.println("Wrong color black");
                                 return;
                             }
-  
-                            if (!firstClick.hasPiece()) {
-                                firstClick = null;
-                                clickCount = 0;
-                            }
+                          //Gathers the second click's information
                         } else if (secondClick == null && clickCount == 1) {
                             eventsource = (Node) event.getSource();
                             getSecondClick(eventsource);
+                            //checks if a move is being made to a space that contains a same color piece.
                             if(secondClick.hasPiece() && secondClick.getCurrentpiece().color == movePiece.getColor()) {
                                 firstClick = null;
                                 secondClick = null;
@@ -88,7 +108,7 @@ public class Board extends GridPane implements Serializable {
                                 secondClick = null;
                                 clickCount = 0;
                             }
-                            
+                            //If all conditions are met, it exectutes a move.
                             if (clickCount == 2 && firstClick != null && secondClick != null && movePiece.isPathClear(firstClick, secondClick)) {
                                 Piece newpiece = firstClick.getCurrentpiece();
                                 newpiece.setXcoord(secondClick.getX());
@@ -100,6 +120,8 @@ public class Board extends GridPane implements Serializable {
                                 firstClick = null;
                                 secondClick = null;
                                 clickCount = 0;
+                                
+                                //Toggles the moves on both players.
                                 if(player1.isTurn()) {
                                     player1.setTurn(false);
                                     player2.setTurn(true);
@@ -135,6 +157,12 @@ public class Board extends GridPane implements Serializable {
 
         }
     }
+    /**
+     * Checks to see if the player and the piece share the same color.
+     * @param player
+     * @param piece
+     * @return a boolean
+     */
     private boolean isSameColor(Player player, Piece piece) {
         int playerColor = player.getColor();
         int pieceColor = piece.getColor();
@@ -144,6 +172,10 @@ public class Board extends GridPane implements Serializable {
         return false;
         
     }
+    /**
+     * Gathers the instance data for the first click
+     * @param eventsource, the node used to obtain the specific space. 
+     */
     private void getFirstClick(Node eventsource) {
         clickCount++;
         int x1 = GridPane.getColumnIndex(eventsource);
@@ -153,6 +185,10 @@ public class Board extends GridPane implements Serializable {
         firstClick = getSpace(x1, y1);
         movePiece = firstClick.getCurrentpiece();
     }
+    /**
+     * Gathers the instance data for the second click
+     * @param eventsource, the node used to obtain the specific space. 
+     */
     private void getSecondClick(Node eventsource) {
         clickCount++;
         int x2 = GridPane.getColumnIndex(eventsource);
@@ -161,7 +197,9 @@ public class Board extends GridPane implements Serializable {
         System.out.println("Y2: " + y2);
         secondClick = getSpace(x2, y2);
     }
-    
+    /**
+     * Initalizes all the pieces on the board, providing color and coordinates to all pieces.
+     */
     public void initalizePieces() {
         int black = 0;
         int white = 1;
@@ -190,6 +228,10 @@ public class Board extends GridPane implements Serializable {
             spaces[column][6].setPiece(new Pawn(true, column, 6, white));
         }
     }
+    /**
+     * Used to redraw a new, updated board when loading in an existing game.
+     * @param newSpaces an array of updated spaces.
+     */
     public void redrawBoard(Space[][] newSpaces) {
         spaces = new Space[8][8];
         for (int column = 0; column < spaces.length; column++) {
@@ -219,10 +261,6 @@ public class Board extends GridPane implements Serializable {
                                 return;
                             }
   
-                            if (!firstClick.hasPiece()) {
-                                firstClick = null;
-                                clickCount = 0;
-                            }
                         } else if (secondClick == null && clickCount == 1) {
                             eventsource = (Node) event.getSource();
                             getSecondClick(eventsource);
@@ -283,6 +321,11 @@ public class Board extends GridPane implements Serializable {
         }
         
     }
+    /**
+     * Places the pieces on the board given the new, updated positions.
+     * Used when loading
+     * @param pieces, an array containing the saved pieces
+     */
     public void redrawPieces(Piece[] pieces) {
         for(int i = 0;  i < pieces.length; i++) {
             if(pieces[i] ==  null) {

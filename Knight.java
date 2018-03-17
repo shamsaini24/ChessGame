@@ -26,6 +26,10 @@ public class Knight extends Piece{
     }
 
     @Override
+    /**
+     * Checks if the space the piece is being moved to is valid.
+     * @return a boolean, if the space is a valid spot it can move.
+     */
     boolean isValid(Space newSpace, Space curSpace) {
         int startX = curSpace.getX();
         int startY = curSpace.getY();
@@ -43,6 +47,7 @@ public class Knight extends Piece{
     }
 
     @Override
+    //The knight can jump over pieces, therefore the path will always be clear.
     boolean isPathClear(Space start, Space end) {
         return true;
     }

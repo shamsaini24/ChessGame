@@ -6,6 +6,7 @@ package ca.bcit.comp2526.a2a;
 import java.io.Serializable;
 
 /**
+ * A basic player class.
  * @author sham2
  *
  */
